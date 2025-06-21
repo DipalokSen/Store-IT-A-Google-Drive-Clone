@@ -23,7 +23,13 @@ import Link from "next/link"
 
 
 import React from 'react'
+import { createAcount } from "@/lib/actions/user.action"
+
+import { useState } from "react"
 type formType="sign-in" | "sign-up"
+
+
+
 
 
 const authFormSchema=(FormType:formType)=>{
@@ -33,7 +39,7 @@ return z.object({
 })
 }
 const AuthForm = ({type}:{type:formType}) => {
-  
+  const [AcountId, setAcountId] = useState('');
    const formSchema=authFormSchema(type)
    const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -46,7 +52,15 @@ const AuthForm = ({type}:{type:formType}) => {
 const onSubmit=async (values: z.infer<typeof formSchema>) =>{
     
     console.log(values)
+  const user = await createAcount({
+  fullName: values.FullName || '',
+  email: values.email,
+});
+
+setAcountId(user.accountId)
   }
+
+  
   
   
     return (
