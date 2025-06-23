@@ -26,6 +26,7 @@ import React from 'react'
 import { createAcount } from "@/lib/actions/user.action"
 
 import { useState } from "react"
+import OTPModal from "./OTPModal"
 type formType="sign-in" | "sign-up"
 
 
@@ -123,8 +124,9 @@ setAcountId(user.accountId)
             <Link className="ml-1 font-medium text-brand" href={type==="sign-in"?"/sign-in":"sign-up"}>{type==="sign-in"?"Sign Up":"Sign-In"}</Link>
         </div>
       </form>
+       {AcountId && <OTPModal email={form.getValues('email')} accountId={AcountId}/>}
     </Form>
-    {/* otp */}
+   
     </>
   )
 }
