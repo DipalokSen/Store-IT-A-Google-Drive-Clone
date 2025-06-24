@@ -47,7 +47,11 @@ const OTPModal = ({email,accountId}:{
        }catch(error){
         console.log("failed To send Otp");
         
-       }     
+       }   
+       
+       finally{
+        setisLoading(false)
+       }
 
 
    }
