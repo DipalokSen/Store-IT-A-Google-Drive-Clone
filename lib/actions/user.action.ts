@@ -9,6 +9,9 @@ import { parseStringify } from "../utils"
 import { cookies } from "next/headers"
 import { Result } from "postcss"
 
+
+import { redirect } from "next/navigation"
+
 const getUserByEmail = async (email: string) => {
 
     const { database } = await createAdminClient()
@@ -126,3 +129,19 @@ return parseStringify(user.documents[0]);
 
 }
 
+export const signoutUser=async ()=>{
+
+  const {account} = await createSessionClient()
+
+  try{
+await account.deleteSession("current");
+(await cookies()).delete("appwrite-session")
+  }catch(error){
+    console.log("Failed To Log Out User");
+    
+  }
+  finally{
+    redirect("/sign-in")
+  }
+    
+}
