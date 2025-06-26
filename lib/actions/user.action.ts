@@ -7,6 +7,7 @@ import { console } from "inspector"
 
 import { parseStringify } from "../utils"
 import { cookies } from "next/headers"
+import { Result } from "postcss"
 
 const getUserByEmail = async (email: string) => {
 
@@ -102,4 +103,26 @@ export const createAcount = async ({ fullName, email }: { fullName: string, emai
     }
 }
 
+
+export const  getCurrentUser =async ()=>{
+const {database,account}= await createSessionClient()
+
+const result=await account.get()
+
+const user =await database.listDocuments(
+    appwriteConfig.databaseid,
+    appwriteConfig.userCollectionId,
+    [Query.equal("accountid",result.$id)]
+)
+
+if(user.total<0) return null
+
+return parseStringify(user.documents[0]);
+
+
+
+
+
+
+}
 
