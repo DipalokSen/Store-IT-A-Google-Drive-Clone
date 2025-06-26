@@ -23,7 +23,7 @@ import Link from "next/link"
 
 
 import React from 'react'
-import { createAcount } from "@/lib/actions/user.action"
+import { createAcount, signinUser } from "@/lib/actions/user.action"
 
 import { useState } from "react"
 import OTPModal from "./OTPModal"
@@ -53,10 +53,16 @@ const AuthForm = ({type}:{type:formType}) => {
 const onSubmit=async (values: z.infer<typeof formSchema>) =>{
     
     console.log(values)
-  const user = await createAcount({
+   
+   const user=
+    type==="sign-up"?
+    await createAcount({
   fullName: values.FullName || '',
   email: values.email,
-});
+  
+}) :await signinUser({email:values.email})
+
+ 
 
 setAcountId(user.accountId)
   }

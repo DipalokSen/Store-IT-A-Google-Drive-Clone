@@ -145,3 +145,22 @@ await account.deleteSession("current");
   }
     
 }
+
+
+export const signinUser=async ({email}:{email:string})=>{
+    const existingUser=await getUserByEmail(email)
+
+    try{
+if(existingUser){
+        sendEmailOTP({email})
+
+        return parseStringify({accountId:existingUser.accountid})
+    }
+    else return parseStringify({accountId:null,error:"user not found"})
+
+    }
+    catch(error){
+        throw new Error("failed to find your account")
+    }
+    
+}
