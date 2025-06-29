@@ -4,7 +4,10 @@ import Search from '@/components/Search'
 import FileUploader from "@/components/FileUploader"
 import { signoutUser } from '@/lib/actions/user.action'
 
-const Header = () => {
+const Header = ({accountId,ownerId}:{
+  accountId:string,
+  ownerId:string
+}) => {
   return (
     
     <header className='header'>
@@ -12,7 +15,7 @@ const Header = () => {
         <Search/>
 
         <div className="header-wrapper">
-            <FileUploader/>
+            <FileUploader ownerId={ownerId} accountId={accountId}/>
             <form action={async ()=>{
               "use server"
               await signoutUser()
