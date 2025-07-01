@@ -3,11 +3,12 @@ import { createAdminClient } from "../appwrite"
 
 import { InputFile } from "node-appwrite/file"
 import { appwriteConfig } from "../appwrite/config";
-import { ID } from "node-appwrite";
+import { ID, Query } from "node-appwrite";
 import { constructFileUrl, getFileType, parseStringify } from "../utils";
 import { error } from "console";
 import { revalidatePath } from "next/cache";
 import { url } from "inspector";
+import { getCurrentUser } from "./user.action";
 const handleError = (error: unknown, message: string) => {
 
     console.log(error, message);
@@ -51,4 +52,43 @@ return parseStringify(newFile)
 }catch(error){
    handleError(error,"Failed To Upload The Data")
 }
+}
+
+
+const createQueries = (getCurrentUser: any) => {
+    
+const queries = [
+    Query.or(
+        [
+            Query.equal("owner", getCurrentUser.$id),
+            Query.contains("user", getCurrentUser.email)
+
+        ])
+    
+]
+ return queries
+}
+
+export const getFiles= async ()=>{
+    const {database}=await createAdminClient()
+    try{
+        const currentUser=await getCurrentUser()
+        if(!currentUser) throw new Error("User not authenticated")
+          
+            const queries=createQueries(currentUser)
+
+            const files=await database.listDocuments(
+                appwriteConfig.databaseid,
+                appwriteConfig.filesCollectionId,
+                queries,
+            )
+
+
+            return parseStringify(files)
+
+
+            
+    }catch(error){  
+        handleError(error,"Failed To Get Files")
+    }
 }
