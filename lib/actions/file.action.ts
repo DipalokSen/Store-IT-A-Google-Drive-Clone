@@ -35,7 +35,7 @@ try{
         accountId,
         user:[],
         bucketFileId:bucketFile.$id
-    }
+}
 
     const newFile=await database.createDocument(
         appwriteConfig.databaseid,

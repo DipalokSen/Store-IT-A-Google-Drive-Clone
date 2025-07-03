@@ -30,7 +30,7 @@ export const actionsDropdownItems = [
   {
     label: "Rename",
     icon: "/assets/icons/edit.svg",
-    value: "rename",
+  value: "rename",
   },
   {
     label: "Details",
