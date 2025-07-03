@@ -1,4 +1,5 @@
 
+import FileCard from '@/components/FileCard'
 import { getFiles } from '@/lib/actions/file.action'
 import { Models } from 'node-appwrite'
 import React from 'react'
@@ -35,7 +36,7 @@ const page = async ({params}:SearchParamProps) => {
       {files.total > 0 ? (
           <section className='file-list'>
             {files.documents.map((file:Models.Document)=>(
-              <h1 className='h1' key={file.$id}>{file.name}</h1>
+              <FileCard key={file.$id} file={file} />
             ))}
           </section>
       ):<p className='no-files'> No files uploaded</p>}
