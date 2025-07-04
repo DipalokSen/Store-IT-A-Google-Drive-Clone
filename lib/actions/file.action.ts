@@ -3,7 +3,7 @@ import { createAdminClient } from "../appwrite"
 
 import { InputFile } from "node-appwrite/file"
 import { appwriteConfig } from "../appwrite/config";
-import { ID, Query } from "node-appwrite";
+import { ID, Query, Users } from "node-appwrite";
 import { constructFileUrl, getFileType, parseStringify } from "../utils";
 import { error } from "console";
 import { revalidatePath } from "next/cache";
@@ -104,6 +104,35 @@ export const renameFile =async ({fileId,name,extension,path}:RenameFileProps)=>{
         appwriteConfig.filesCollectionId,
         fileId,
         {name:newName}
+      )
+        revalidatePath(path)
+ return parseStringify(updateFile)
+ 
+ }catch(error){
+    handleError(error,"Failed To Rename File")
+ }
+
+ 
+
+}
+
+
+
+
+export const updateFileUsers =async ({fileId,emails,path}:UpdateFileUsersProps)=>{
+
+ const {database}=await createAdminClient()
+ try{
+      
+      const updateFile=await database.updateDocument(
+        appwriteConfig.databaseid,
+        appwriteConfig.filesCollectionId,
+        fileId,
+        {user:emails
+
+
+            
+        }
       )
         revalidatePath(path)
  return parseStringify(updateFile)

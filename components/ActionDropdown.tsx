@@ -31,14 +31,16 @@ import { render } from 'react-dom'
 import { Input } from './ui/input'
 import { Button } from './ui/button'
 import { usePathname } from 'next/navigation'
-import { renameFile } from '@/lib/actions/file.action'
-import { FileDetails } from './ActionModalContent'
+import { renameFile, updateFileUsers } from '@/lib/actions/file.action'
+import { FileDetails, ShareInput } from './ActionModalContent'
 const ActionDropdown =  ({file}:{file:Models.Document}) => {
   
   const [isModelOpen, setisModelOpen] = useState(false);
   const [isDropdownOpen, setisDropdownOpen] = useState(false);
   const [action, setaction] = useState<ActionType | null>(null);
   const [name, setname] = useState(file.name);
+  const [emails, setemails] = useState<string[]>([]);
+  
   const path=usePathname()
   
 
@@ -62,7 +64,11 @@ const actions={
       path,
     }),
     delete: async () => console.log("Delete action not implemented yet"),
-    share: async () => console.log("Share action not implemented yet"),
+    share: async () => updateFileUsers({
+      fileId: file.$id,
+      emails: emails,
+      path,
+    })
 } 
 
 success=await actions[action.value as keyof typeof actions]();
@@ -72,6 +78,23 @@ if(success){
 }
 
 }
+
+const handleRemove=async (email:string)=>{
+
+const updatedEmails = emails.filter((e)=> e!=email)
+
+const success=await updateFileUsers({
+  fileId: file.$id,
+  emails: updatedEmails,
+  path,})
+  
+if(success){
+  setemails(updatedEmails);
+  closeModal();
+}
+
+}
+
 
 
   const renderDialogContent=()=>{
@@ -98,6 +121,12 @@ if(success){
             <FileDetails file={file} />
         )
      }
+
+      {
+      action.value==="share" && (
+            <ShareInput file={file} onInputChange={setemails} onRemove={handleRemove}/>
+        )
+     }
     </DialogHeader>
 
     {
@@ -109,7 +138,7 @@ if(success){
         </Button>
         
         <Button className='modal-submit-button' onClick={setAction}>
-           Submit
+           {action.value==="delete"?"Delete":action.value==="share"?"Share":action.value==="rename"?"Rename":"Submit"}
         </Button>
         </DialogFooter>
         
