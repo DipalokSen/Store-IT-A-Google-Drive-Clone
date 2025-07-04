@@ -30,13 +30,15 @@ import { constructDownloadUrl } from '@/lib/utils'
 import { render } from 'react-dom'
 import { Input } from './ui/input'
 import { Button } from './ui/button'
-const ActionDropdown = ({file}:{file:Models.Document}) => {
+import { usePathname } from 'next/navigation'
+import { renameFile } from '@/lib/actions/file.action'
+const ActionDropdown =  ({file}:{file:Models.Document}) => {
   
   const [isModelOpen, setisModelOpen] = useState(false);
   const [isDropdownOpen, setisDropdownOpen] = useState(false);
   const [action, setaction] = useState<ActionType | null>(null);
   const [name, setname] = useState(file.name);
-  
+  const path=usePathname()
   
 
 
@@ -47,7 +49,26 @@ setaction(null);
 setname(file.name);
 }
 
-const setAction=()=>{
+const setAction=async ()=>{
+
+if(!action) return;
+let success=false
+const actions={
+  rename: () =>  renameFile({
+      fileId: file.$id,
+      name,
+      extension: file.extension,
+      path,
+    }),
+    delete: async () => console.log("Delete action not implemented yet"),
+    share: async () => console.log("Share action not implemented yet"),
+} 
+
+success=await actions[action.value as keyof typeof actions]();
+
+if(success){
+  closeModal();
+}
 
 }
 
