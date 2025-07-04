@@ -31,7 +31,7 @@ import { render } from 'react-dom'
 import { Input } from './ui/input'
 import { Button } from './ui/button'
 import { usePathname } from 'next/navigation'
-import { renameFile, updateFileUsers } from '@/lib/actions/file.action'
+import { deleteFile, renameFile, updateFileUsers } from '@/lib/actions/file.action'
 import { FileDetails, ShareInput } from './ActionModalContent'
 const ActionDropdown =  ({file}:{file:Models.Document}) => {
   
@@ -63,7 +63,12 @@ const actions={
       extension: file.extension,
       path,
     }),
-    delete: async () => console.log("Delete action not implemented yet"),
+    delete: async () => deleteFile({
+      fileId: file.$id,
+      bucketFileId: file.bucketFileId,
+      
+      path,
+    }),
     share: async () => updateFileUsers({
       fileId: file.$id,
       emails: emails,
@@ -125,6 +130,14 @@ if(success){
       {
       action.value==="share" && (
             <ShareInput file={file} onInputChange={setemails} onRemove={handleRemove}/>
+        )
+     }
+
+     {
+      action.value==="delete" && (
+         <p className='delete-confirmation'>Are You Sure You Want To Delete It?{` `}
+         <span className='delete-file-name'>{file.name}</span>
+</p>
         )
      }
     </DialogHeader>
