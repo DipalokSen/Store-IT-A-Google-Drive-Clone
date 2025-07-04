@@ -3,7 +3,7 @@ import { createAdminClient } from "../appwrite"
 
 import { InputFile } from "node-appwrite/file"
 import { appwriteConfig } from "../appwrite/config";
-import { ID, Query, Users } from "node-appwrite";
+import { ID, Models, Query, Users } from "node-appwrite";
 import { constructFileUrl, getFileType, parseStringify } from "../utils";
 import { error } from "console";
 import { revalidatePath } from "next/cache";
@@ -55,7 +55,7 @@ return parseStringify(newFile)
 }
 
 
-const createQueries = (getCurrentUser: any) => {
+const createQueries = (getCurrentUser:Models.Document,types:string[]) => {
     
 const queries = [
     Query.or(
@@ -64,18 +64,24 @@ const queries = [
             Query.contains("user", getCurrentUser.email)
 
         ])
+
+
     
 ]
+   if(types.length>0){
+    queries.push(Query.equal("type1", types))
+   }
+
  return queries
 }
 
-export const getFiles= async ()=>{
+export const getFiles= async ({types=[]}:GetFilesProps)=>{
     const {database}=await createAdminClient()
     try{
         const currentUser=await getCurrentUser()
         if(!currentUser) throw new Error("User not authenticated")
           
-            const queries=createQueries(currentUser)
+            const queries=createQueries(currentUser,types)
 
             const files=await database.listDocuments(
                 appwriteConfig.databaseid,
