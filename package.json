@@ -34,7 +34,7 @@
     "recharts": "^2.13.3",
     "sonner": "^2.0.5",
     "tailwind-merge": "^2.5.4",
-    "use-debounce": "^10.0.4",
+    "use-debounce": "^10.0.5",
     "zod": "^3.25.67"
   },
   "overrides": {

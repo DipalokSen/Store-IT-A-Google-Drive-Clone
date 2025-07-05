@@ -32,6 +32,12 @@ const nextConfig: NextConfig = {
     hostname: 'fra.cloud.appwrite.io',
     pathname: '/v1/storage/**',
   },
+   {
+        protocol: 'https',
+        hostname: 'imgs.search.brave.com',
+        port: '',
+        pathname: '/**',
+      },
     ],
   },
 };
