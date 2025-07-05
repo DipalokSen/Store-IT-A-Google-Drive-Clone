@@ -127,7 +127,7 @@ setAcountId(user.accountId)
             
             {type==="sign-up"?"Alredy Have An Account?":"Dont Have An Account?"}
             </p>
-            <Link className="ml-1 font-medium text-brand" href={type==="sign-in"?"/sign-in":"sign-up"}>{type==="sign-in"?"Sign Up":"Sign-In"}</Link>
+            <Link className="ml-1 font-medium text-brand" href={type==="sign-in"?"/sign-up":"/sign-in"}>{type==="sign-in"?"Sign Up":"Sign-In"}</Link>
         </div>
       </form>
        {AcountId && <OTPModal email={form.getValues('email')} accountId={AcountId}/>}

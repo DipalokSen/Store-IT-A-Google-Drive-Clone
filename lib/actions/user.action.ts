@@ -127,7 +127,7 @@ return parseStringify(user.documents[0]);
 
 
 }catch(error){
-    console.log("Error is idk",error)
+    console.log("Took me days To find this Freakin error",error)
     return null
 }
    

@@ -80,7 +80,7 @@ const OTPModal = ({email,accountId}:{
         />
       </AlertDialogTitle>
       <AlertDialogDescription className="suntitle-2 text-center text-light-100">
-        We Sent A OTP To <span className="text-brand">Aksharsen68@gmail.com</span>
+        We Sent A OTP To <span className="text-brand">{email}</span>
       </AlertDialogDescription>
     </AlertDialogHeader>
 
