@@ -34,7 +34,7 @@ const Search = () => {
     
     const fetchFiles=async ()=>{
 
-   const files=await getFiles({searchText:debouncedQuery})
+   const files=await getFiles({types:[],searchText:debouncedQuery})
     
    if(debouncedQuery.length===0){
     setresult([]);

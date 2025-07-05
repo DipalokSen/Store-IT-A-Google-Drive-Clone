@@ -1,5 +1,5 @@
 "use server"
-import { createAdminClient } from "../appwrite"
+import { createAdminClient, createSessionClient } from "../appwrite"
 
 import { InputFile } from "node-appwrite/file"
 import { appwriteConfig } from "../appwrite/config";
@@ -185,7 +185,58 @@ export const deleteFile =async ({fileId,bucketFileId,path}:DeleteFileProps)=>{
 
 }
 
+export async function getTotalSpaceUsed() {
+  try {
+    const { database } = await createSessionClient();
+    const currentUser = await getCurrentUser();
+    if (!currentUser) throw new Error("User is not authenticated.");
 
-// fileId: string;
-//   bucketFileId: string;
-//   path: string;
+    const files = await database.listDocuments(
+      appwriteConfig.databaseid,
+      appwriteConfig.filesCollectionId,
+      [Query.equal("owner", [currentUser.$id])],
+    );
+
+    const totalSpace = {
+      image: { size: 0, latestDate: "" },
+      document: { size: 0, latestDate: "" },
+      video: { size: 0, latestDate: "" },
+      audio: { size: 0, latestDate: "" },
+      other: { size: 0, latestDate: "" },
+      used: 0,
+      all: 2 * 1024 * 1024 * 1024 /* 2GB available bucket storage */,
+    };
+
+    files.documents.forEach((file) => {
+      const fileType = file.type1 as FileType;
+      
+      // Check if the fileType exists in totalSpace to prevent undefined errors
+      if (totalSpace[fileType]) {
+        totalSpace[fileType].size += file.size;
+        totalSpace.used += file.size;
+
+        if (
+          !totalSpace[fileType].latestDate ||
+          new Date(file.$updatedAt) > new Date(totalSpace[fileType].latestDate)
+        ) {
+          totalSpace[fileType].latestDate = file.$updatedAt;
+        }
+      } else {
+        // Handle unexpected file types as 'other'
+        totalSpace.other.size += file.size;
+        totalSpace.used += file.size;
+
+        if (
+          !totalSpace.other.latestDate ||
+          new Date(file.$updatedAt) > new Date(totalSpace.other.latestDate)
+        ) {
+          totalSpace.other.latestDate = file.$updatedAt;
+        }
+      }
+    });
+
+    return parseStringify(totalSpace);
+  } catch (error) {
+    handleError(error, "Error calculating total space used: ");
+  }
+}

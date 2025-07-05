@@ -5,11 +5,17 @@ import { getCurrentUser } from '@/lib/actions/user.action'
 import { redirect } from 'next/navigation'
 import React from 'react'
 import { Toaster } from "@/components/ui/sonner"
+
+export const dynamic="force-dynamic"
 const layout =async  ({children}:{children:React.ReactNode}) => {
   
    const currentUser=await getCurrentUser()
+
+   
    console.log('Current user data:', currentUser);
-   if (!currentUser) return redirect("/sign-in")
+   if (!currentUser)  {
+    return redirect("/sign-in")
+   }
   return (
 
    

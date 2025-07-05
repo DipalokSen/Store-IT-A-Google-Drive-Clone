@@ -108,7 +108,9 @@ export const createAcount = async ({ fullName, email }: { fullName: string, emai
 
 
 export const  getCurrentUser =async ()=>{
-const {database,account}= await createSessionClient()
+
+try{
+ const {database,account}= await createSessionClient()
 
 const result=await account.get()
 
@@ -118,9 +120,17 @@ const user =await database.listDocuments(
     [Query.equal("accountid",result.$id)]
 )
 
-if(user.total<0) return null
+if(user.total<=0) return null
 
 return parseStringify(user.documents[0]);
+
+
+
+}catch(error){
+    console.log("Error is idk",error)
+    return null
+}
+   
 
 
 
