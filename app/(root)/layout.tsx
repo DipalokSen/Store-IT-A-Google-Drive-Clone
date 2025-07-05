@@ -10,7 +10,8 @@ export const dynamic="force-dynamic"
 const layout =async  ({children}:{children:React.ReactNode}) => {
   
    const currentUser=await getCurrentUser()
-
+  
+    console.log("Debug ",currentUser)
    
    console.log('Current user data:', currentUser);
    if (!currentUser)  {
