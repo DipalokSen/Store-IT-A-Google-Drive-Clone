@@ -5,6 +5,8 @@ import { getFileTypesParams } from '@/lib/utils'
 import { Models } from 'node-appwrite'
 import React from 'react'
 // import Sort from '@/components/sort'
+
+import Sort from '@/components/Sort'
 const page = async ({searchParams,params}:SearchParamProps) => {
   const type = ( (await params)?.type as string )
    
@@ -29,7 +31,7 @@ const page = async ({searchParams,params}:SearchParamProps) => {
               Sort by:
             </p>
               
-              {/* <Sort /> */}
+               <Sort /> 
            
           </div>
 
